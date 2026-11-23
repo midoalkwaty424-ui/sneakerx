@@ -26,7 +26,7 @@ function VaultFallback({ items, onOpen }: FallbackProps) {
       data-vault-fallback
       className="absolute inset-0 z-0 flex items-center justify-center px-4"
     >
-      <div className="flex w-full max-w-5xl snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pt-28 [scrollbar-width:none] md:pt-32 [&::-webkit-scrollbar]:hidden">
+      <div className="flex w-full max-w-5xl snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pt-16 [scrollbar-width:none] md:pt-32 [&::-webkit-scrollbar]:hidden">
         {items.length === 0
           ? [0, 1, 2].map((index) => (
               <div
@@ -61,7 +61,6 @@ function VaultFallback({ items, onOpen }: FallbackProps) {
 }
 
 export function SneakerVault({ products }: { products: Product[] }) {
-  const items = useMemo(() => products.slice(0, MAX_ITEMS), [products])
   const { ref, mounted, visible } = useSceneVisibility<HTMLElement>('360px')
   const documentVisible = useDocumentVisible()
   const stageRef = useRef<HTMLDivElement>(null)
@@ -73,7 +72,6 @@ export function SneakerVault({ products }: { products: Product[] }) {
     startRotation: 0,
     rotation: 0,
   })
-  const itemsLength = useRef(items.length)
   const viewed = useRef(false)
   const lastFocus = useRef(-1)
 
@@ -81,6 +79,11 @@ export function SneakerVault({ products }: { products: Product[] }) {
   const [can3d, setCan3d] = useState(false)
   const [compact, setCompact] = useState(false)
   const [ready, setReady] = useState(false)
+  const items = useMemo(
+    () => products.slice(0, compact ? 5 : MAX_ITEMS),
+    [products, compact],
+  )
+  const itemsLength = useRef(items.length)
   const [active, setActive] = useState(0)
   const [dragging, setDragging] = useState(false)
   const [quick, setQuick] = useState<Product | null>(null)
@@ -255,7 +258,7 @@ export function SneakerVault({ products }: { products: Product[] }) {
         aria-hidden="true"
       />
 
-      <div className="relative h-[100svh] min-h-[740px] max-h-[1120px]">
+      <div className="relative h-[100svh] min-h-[560px] max-h-[1120px] md:min-h-[740px]">
         {(!ready || !can3d) && (
           <VaultFallback
             key="vault-fallback"
@@ -290,7 +293,7 @@ export function SneakerVault({ products }: { products: Product[] }) {
           </div>
         )}
 
-        <div className="pointer-events-none relative z-10 flex h-full flex-col justify-between gap-6 container-x pb-7 pt-20 md:pb-10 md:pt-24">
+        <div className="pointer-events-none relative z-10 flex h-full flex-col justify-between gap-6 container-x pb-6 pt-14 md:pb-10 md:pt-24">
           <header className="flex items-start justify-between gap-6">
             <div className="max-w-xl">
               <div className="mb-4 flex items-center gap-3">

@@ -71,6 +71,7 @@ export function ProductCard({ product, index = 0, priority = false, onQuickView 
                   src={secondaryThumb}
                   alt=""
                   aria-hidden="true"
+                  data-hover-photo
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 h-full w-full object-cover opacity-0 transition-[opacity,transform] duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.07] group-hover:opacity-100"

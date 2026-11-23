@@ -19,7 +19,7 @@ const FALLBACK_DEPTH = [
   { z: -110, rotate: 16, opacity: 0.35 },
 ]
 
-function PortalFallback({ items }: { items: Product[] }) {
+function PortalFallback({ items, compact }: { items: Product[]; compact: boolean }) {
   return (
     <div data-drop-portal-fallback className="absolute inset-0 z-0 overflow-hidden">
       <div
@@ -34,15 +34,17 @@ function PortalFallback({ items }: { items: Product[] }) {
                 className="h-[210px] w-[140px] shrink-0 animate-pulse rounded-2xl border border-line bg-ink2/70 md:h-[280px] md:w-[190px]"
               />
             ))
-          : items.slice(0, 5).map((product, index) => {
+          : items.slice(0, compact ? 3 : 5).map((product, index) => {
               const depth = FALLBACK_DEPTH[index] ?? FALLBACK_DEPTH[4]
               return (
                 <div
                   key={product.id}
-                  className="relative w-[clamp(112px,15vw,190px)] shrink-0 md:w-[clamp(140px,15vw,210px)]"
+                  className="relative w-[clamp(92px,28vw,132px)] shrink-0 md:w-[clamp(140px,15vw,210px)]"
                   style={{
-                    transform: `translateZ(${depth.z}px) rotateY(${depth.rotate}deg)`,
-                    opacity: depth.opacity,
+                    transform: compact
+                      ? 'none'
+                      : `translateZ(${depth.z}px) rotateY(${depth.rotate}deg)`,
+                    opacity: compact ? 1 : depth.opacity,
                   }}
                 >
                   <div className="aspect-[512/592]">
@@ -58,7 +60,6 @@ function PortalFallback({ items }: { items: Product[] }) {
 
 /** Cinematic bridge between the hero and the 3D Vault, built from real product photos. */
 export function DropPortal({ products }: { products: Product[] }) {
-  const items = useMemo(() => products.slice(0, MAX_ITEMS), [products])
   const { ref, mounted, visible } = useSceneVisibility<HTMLElement>('260px')
   const documentVisible = useDocumentVisible()
   const progressRef = useRef(0)
@@ -68,6 +69,10 @@ export function DropPortal({ products }: { products: Product[] }) {
   const [can3d, setCan3d] = useState(false)
   const [compact, setCompact] = useState(false)
   const [ready, setReady] = useState(false)
+  const items = useMemo(
+    () => products.slice(0, compact ? 5 : MAX_ITEMS),
+    [products, compact],
+  )
 
   const markReady = useCallback(() => setReady(true), [])
 
@@ -84,6 +89,9 @@ export function DropPortal({ products }: { products: Product[] }) {
   }, [])
 
   useEffect(() => {
+    // The progress value is only consumed by the WebGL stage; touch devices
+    // stay on the static fallback and must not pay for a scroll-time layout read.
+    if (!can3d) return
     const update = () => {
       const node = ref.current
       if (!node) return
@@ -99,7 +107,7 @@ export function DropPortal({ products }: { products: Product[] }) {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
-  }, [ref])
+  }, [ref, can3d])
 
   useEffect(() => {
     if (!visible || viewed.current) return
@@ -134,8 +142,8 @@ export function DropPortal({ products }: { products: Product[] }) {
         aria-hidden="true"
       />
 
-      <div className="relative h-[430px] md:h-[520px]">
-        {(!ready || !can3d) && <PortalFallback items={items} />}
+      <div className="relative h-[360px] md:h-[520px]">
+        {(!ready || !can3d) && <PortalFallback items={items} compact={compact} />}
 
         {can3d && mounted && items.length > 0 && (
           <div

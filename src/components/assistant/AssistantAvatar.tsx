@@ -2,17 +2,24 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useDeferredScene } from '../../hooks/useDeferredScene'
 import { sceneAllowed } from '../../lib/scene'
 import { useDocumentVisible } from '../../hooks/useSceneVisibility'
-import { Icon } from '../ui/Icon'
 import type { AssistantPointer } from '../three/AssistantHologramScene'
 
 const HologramScene = lazy(() => import('../three/AssistantHologramScene'))
 
 const clamp = (value: number) => Math.max(-1, Math.min(1, value))
 
+/** Static CSS hologram for phones and low-power devices — no WebGL, no frames. */
 function FallbackIcon() {
   return (
-    <span className="grid h-full w-full place-items-center rounded-full bg-volt/15 text-volt">
-      <Icon name="sparkle" className="h-6 w-6" />
+    <span className="relative grid h-full w-full place-items-center" aria-hidden="true">
+      <span className="absolute inset-[8%] rounded-full bg-gradient-to-b from-volt/45 via-volt/10 to-transparent ring-1 ring-volt/25" />
+      <span className="absolute inset-[20%] overflow-hidden rounded-[42%] bg-gradient-to-b from-bone/95 to-bone/40 shadow-[0_0_18px_rgba(217,255,67,.25)]">
+        <span className="absolute left-[25%] top-[38%] h-[13%] w-[13%] rounded-full bg-ink" />
+        <span className="absolute right-[25%] top-[38%] h-[13%] w-[13%] rounded-full bg-ink" />
+        <span className="absolute left-[13%] top-[53%] h-[9%] w-[13%] rounded-full bg-flare/30" />
+        <span className="absolute right-[13%] top-[53%] h-[9%] w-[13%] rounded-full bg-flare/30" />
+        <span className="absolute left-[38%] top-[63%] h-[7%] w-[24%] rounded-b-full border-b-2 border-ink" />
+      </span>
     </span>
   )
 }

@@ -56,6 +56,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, y: 10, scale: 0.96 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="pointer-events-auto flex items-center gap-3 rounded-full border border-line bg-ink2/95 px-4 py-3 text-sm shadow-[0_20px_60px_rgba(0,0,0,.55)] backdrop-blur-xl"
+              data-toast
               role="status"
             >
               <span

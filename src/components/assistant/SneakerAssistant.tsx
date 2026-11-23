@@ -61,7 +61,7 @@ export function SneakerAssistant() {
       <button
         type="button"
         onClick={() => (isOpen ? closeAssistant() : openAssistant())}
-        className="assistant-fab relative block h-28 w-28 shrink-0 rounded-full transition-transform duration-300 hover:scale-105 active:scale-95 sm:h-32 sm:w-32"
+        className="assistant-fab relative block h-20 w-20 shrink-0 rounded-full transition-transform duration-300 hover:scale-105 active:scale-95 sm:h-28 sm:w-28 lg:h-32 lg:w-32"
         aria-label="دردشة SNEAKERX"
         aria-expanded={isOpen}
         title="دردشة SNEAKERX"
@@ -77,7 +77,7 @@ export function SneakerAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="assistant-panel fixed inset-x-3 z-[93] flex max-h-[78vh] flex-col overflow-hidden rounded-2xl border border-bone/15 bg-ink/97 shadow-[0_30px_90px_rgba(0,0,0,.7)] backdrop-blur-xl sm:inset-x-auto sm:right-5 sm:w-[25rem]"
+            className="assistant-panel fixed inset-x-3 z-[96] flex max-h-[78vh] flex-col overflow-hidden rounded-2xl border border-bone/15 bg-ink/97 shadow-[0_30px_90px_rgba(0,0,0,.7)] backdrop-blur-xl sm:inset-x-auto sm:right-5 sm:w-[25rem]"
             role="dialog"
             aria-label="مساعد التسوق"
             data-assistant-panel

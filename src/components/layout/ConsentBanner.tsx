@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getConsent, setConsent, type ConsentValue } from '../../lib/analytics'
 import { Icon } from '../ui/Icon'
@@ -7,6 +7,7 @@ import { Icon } from '../ui/Icon'
 export function ConsentBanner() {
   const [value, setValue] = useState<ConsentValue>(() => getConsent())
   const [visible, setVisible] = useState(false)
+  const bannerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (value) return
@@ -14,20 +15,40 @@ export function ConsentBanner() {
     return () => window.clearTimeout(timer)
   }, [value])
 
-  /* Lift the floating dock above this banner on small screens so the
-     assistant stays tappable until the visitor makes a privacy choice. */
+  /* Lift the floating controls by the banner's real height so the assistant
+     stays tappable without leaving a large empty gap on short phone screens.
+     The panel needs the offset at every width (the banner follows the viewport
+     edge on tablets too); the dock only needs it on phones where the banner is
+     full width. */
   useEffect(() => {
     const apply = () => {
+      const banner = bannerRef.current
+      const height = visible && !value && banner ? banner.getBoundingClientRect().height : 0
+      // On phones the panel fills the space between the header and the banner,
+      // so only a small seam is needed. On wider screens there is room for a
+      // comfortable gap beside the card-style banner.
+      const panelOffset = height
+        ? Math.ceil(height) + (window.innerWidth < 640 ? 0 : 16)
+        : 0
+      document.documentElement.style.setProperty('--panel-offset', `${panelOffset}px`)
       document.documentElement.style.setProperty(
         '--dock-offset',
-        visible && !value && window.innerWidth < 640 ? '190px' : '0px',
+        `${height && window.innerWidth < 640 ? Math.ceil(height) + 16 : 0}px`,
       )
     }
-    apply()
+    const frame = window.requestAnimationFrame(apply)
+    const observer =
+      typeof ResizeObserver !== 'undefined' && bannerRef.current
+        ? new ResizeObserver(apply)
+        : null
+    if (bannerRef.current) observer?.observe(bannerRef.current)
     window.addEventListener('resize', apply)
     return () => {
+      window.cancelAnimationFrame(frame)
+      observer?.disconnect()
       window.removeEventListener('resize', apply)
       document.documentElement.style.removeProperty('--dock-offset')
+      document.documentElement.style.removeProperty('--panel-offset')
     }
   }, [visible, value])
 
@@ -41,6 +62,7 @@ export function ConsentBanner() {
     <AnimatePresence>
       {visible && !value && (
         <motion.div
+          ref={bannerRef}
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 30, opacity: 0 }}

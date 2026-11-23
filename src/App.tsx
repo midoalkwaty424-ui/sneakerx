@@ -16,6 +16,7 @@ import { CinematicIntro } from './components/intro/CinematicIntro'
 import { AdminLayout } from './components/admin/AdminLayout'
 import { PageLoader } from './components/ui/PageLoader'
 import { trackPageView } from './lib/analytics'
+import { isCompactDevice } from './hooks/useCompactDevice'
 
 const Home = lazy(() => import('./pages/Home'))
 const Shop = lazy(() => import('./pages/Shop'))
@@ -43,6 +44,12 @@ const Finance = lazy(() => import('./pages/admin/Finance'))
 
 function introSeen() {
   try {
+    // Phones skip the cinematic intro entirely: it is a scroll-driven full-screen
+    // canvas animation that costs far more than it adds on a small touch device.
+    if (isCompactDevice()) {
+      sessionStorage.setItem('sx_intro_seen', '1')
+      return true
+    }
     return sessionStorage.getItem('sx_intro_seen') === '1'
   } catch {
     return false

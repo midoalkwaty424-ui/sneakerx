@@ -3,6 +3,7 @@ import { cx } from '../../lib/format'
 import { VAULT_COLLAGE, type VaultCollageSlot } from '../../lib/vault-photos'
 import { colorImages, thumbImage } from '../../lib/product-visuals'
 import { ProductVisual } from '../commerce/ProductVisual'
+import { useCompactDevice } from '../../hooks/useCompactDevice'
 
 type VaultPhotoCollageProps = {
   product: Product
@@ -45,6 +46,7 @@ function Photo({
 
 /** DOM twin of the 3D Vault texture, so both rendering paths share one visual language. */
 export function VaultPhotoCollage({ product, className, priority }: VaultPhotoCollageProps) {
+  const compact = useCompactDevice()
   const shots = colorImages(product, product.colors[0])
 
   return (
@@ -56,14 +58,14 @@ export function VaultPhotoCollage({ product, className, priority }: VaultPhotoCo
     >
       <div
         className="absolute overflow-hidden rounded-[4.5%] ring-1 ring-bone/20"
-        style={slotStyle(VAULT_COLLAGE.main)}
+        style={compact ? { inset: 0 } : slotStyle(VAULT_COLLAGE.main)}
       >
         <Photo image={thumbImage(shots[0])} alt={product.name} priority={priority} />
         <span className="pointer-events-none absolute inset-0 bg-ink/45" />
         <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink/35" />
       </div>
 
-      {VAULT_COLLAGE.details.map((slot, index) => (
+      {!compact && VAULT_COLLAGE.details.map((slot, index) => (
         <div
           key={slot.x}
           className="absolute overflow-hidden rounded-[8%_/12%] bg-ink3 ring-1 ring-bone/10"

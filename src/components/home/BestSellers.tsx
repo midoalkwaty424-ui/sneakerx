@@ -35,13 +35,13 @@ export function BestSellers({ products }: { products: Product[] }) {
                 <Reveal key={product.id} delay={index * 60}>
                   <Link
                     to={`/product/${product.slug}`}
-                    className="group grid grid-cols-[2.2rem_5.5rem_1fr_auto] items-center gap-4 border-b border-line px-3 py-5 transition-colors duration-300 hover:bg-volt hover:text-ink md:grid-cols-[3rem_7rem_1fr_9rem_8rem_3rem] md:gap-6 md:px-5"
+                    className="group grid grid-cols-[4.5rem_1fr_auto] items-center gap-2 border-b border-line px-3 py-4 transition-colors duration-300 hover:bg-volt hover:text-ink sm:gap-3 md:grid-cols-[3rem_7rem_1fr_9rem_8rem_3rem] md:gap-6 md:px-5 md:py-5"
                     data-cursor-label="عرض"
                   >
-                    <span className="font-display text-lg font-bold text-muted transition group-hover:text-ink/50 md:text-2xl">
+                    <span className="hidden font-display text-lg font-bold text-muted transition group-hover:text-ink/50 md:block md:text-2xl">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span className="relative h-20 w-[5.5rem] overflow-hidden rounded-lg border border-bone/10 bg-ink3 transition-colors group-hover:border-ink/25 md:h-24 md:w-28">
+                    <span className="relative h-16 w-[4.5rem] overflow-hidden rounded-lg border border-bone/10 bg-ink3 transition-colors group-hover:border-ink/25 sm:h-20 sm:w-[5.5rem] md:h-24 md:w-28">
                       <ProductVisual
                         image={thumbImage(colorPrimaryImage(product, product.colors[0]))}
                         base={product.colors[0]?.hex}

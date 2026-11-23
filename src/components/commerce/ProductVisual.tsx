@@ -1,6 +1,7 @@
 import { useEffect, useState, type Ref } from 'react'
 import { RealShoePhoto } from '../art/RealShoePhoto'
 import { cx } from '../../lib/format'
+import { thumbImage } from '../../lib/product-visuals'
 
 type ProductVisualProps = {
   image?: string | null
@@ -38,10 +39,18 @@ export function ProductVisual({
   }
 
   if (image && !failed) {
+    // Local catalog shots have 480px thumb and 900px full variants. Let the
+    // browser pick the smaller one on phones instead of downloading the full
+    // image and downscaling it. Remote/Unsplash URLs stay as-is.
+    const thumb = thumbImage(image)
+    const full = image.replace('/images/products/thumbs/', '/images/products/')
+    const srcSet = thumb !== full ? `${thumb} 480w, ${full} 900w` : undefined
+
     return (
       <img
         ref={setRef}
-        src={image}
+        src={thumb ?? image}
+        srcSet={srcSet}
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"

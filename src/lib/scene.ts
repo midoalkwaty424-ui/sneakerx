@@ -3,7 +3,12 @@
  *
  * Every scene in the storefront has a photographic fallback, so these checks
  * only decide whether we *upgrade* to WebGL — never whether the section works.
+ * Phones and tablets stay on the lightweight photographic path: several
+ * simultaneous WebGL render loops drain the battery and make touch scrolling
+ * and tapping feel heavy.
  */
+
+import { isCompactDevice } from '../hooks/useCompactDevice'
 
 type WebGlContext = WebGLRenderingContext | WebGL2RenderingContext
 
@@ -35,6 +40,7 @@ export function reducedMotion(): boolean {
  */
 export function sceneAllowed(): boolean {
   if (typeof window === 'undefined') return false
+  if (isCompactDevice()) return false
   if (reducedMotion()) return false
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
     .connection

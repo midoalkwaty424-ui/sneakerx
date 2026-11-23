@@ -4,6 +4,7 @@ import type { Product } from '../../lib/types'
 import { cx, discountPercent, formatEGP } from '../../lib/format'
 import { colorPrimaryImage, thumbImage } from '../../lib/product-visuals'
 import { gsap, isFinePointer, prefersReducedMotion } from '../../lib/gsap'
+import { isCompactDevice } from '../../hooks/useCompactDevice'
 import { ProductVisual } from '../commerce/ProductVisual'
 import { Icon } from '../ui/Icon'
 import { Magnetic } from '../ui/Magnetic'
@@ -35,7 +36,7 @@ export function Hero({ featured }: { featured?: Product }) {
       // the page is already alive when the overlay is scrolled away.
       tl.play()
 
-      if (!prefersReducedMotion()) {
+      if (!prefersReducedMotion() && !isCompactDevice()) {
         gsap.to(visualRef.current, {
           yPercent: 12,
           ease: 'none',

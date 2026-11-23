@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api, errorMessage } from '../lib/api'
 import type { Product } from '../lib/types'
 import { usePageMeta } from '../hooks/usePageMeta'
+import { useCompactDevice } from '../hooks/useCompactDevice'
 import { organizationJsonLd, websiteJsonLd } from '../lib/seo'
 import { Hero } from '../components/home/Hero'
 import { MarqueeBand } from '../components/home/MarqueeBand'
@@ -33,13 +34,14 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const compact = useCompactDevice()
 
   const load = useCallback(() => {
     setLoading(true)
     setError('')
     const controller = new AbortController()
     api
-      .products({ limit: 24, sort: 'newest' }, controller.signal)
+      .products({ limit: compact ? 12 : 24, sort: 'newest' }, controller.signal)
       .then((result) => {
         setProducts(result.items)
         setLoading(false)
@@ -50,7 +52,7 @@ export default function Home() {
         setLoading(false)
       })
     return controller
-  }, [])
+  }, [compact])
 
   useEffect(() => {
     const controller = load()

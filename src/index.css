@@ -30,12 +30,14 @@
 }
 
 .assistant-panel {
-  bottom: calc(11.5rem + var(--dock-offset, 0px));
+  bottom: calc(1rem + var(--panel-offset, 0px));
+  max-height: calc(100svh - 2rem - var(--panel-offset, 0px));
 }
 
 @media (min-width: 640px) {
   .assistant-panel {
-    bottom: 12rem;
+    bottom: calc(1rem + var(--panel-offset, 0px));
+    max-height: min(78vh, calc(100svh - 2rem - var(--panel-offset, 0px)));
   }
 }
 
@@ -661,5 +663,57 @@
   .cursor-dot,
   .cursor-ring {
     display: none;
+  }
+}
+
+/* Touch devices: keep the look, drop the per-frame work. GSAP/WebGL scenes are
+   gated in scene.ts; these rules cover the remaining CSS-only animation loops. */
+@media (max-width: 900px), (pointer: coarse) {
+  .grain {
+    display: none;
+  }
+
+  .assistant-fab {
+    filter: none;
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .marquee-track,
+  .floaty,
+  .pulse-glow,
+  .kenburns {
+    animation: none !important;
+  }
+
+  .scroll-cue-line::after {
+    animation: none !important;
+  }
+
+  [data-header-pill] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(7, 8, 10, 0.94) !important;
+  }
+
+  [data-vault] .backdrop-blur-md,
+  [data-drop-portal] .backdrop-blur-md {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(7, 8, 10, 0.92) !important;
+  }
+
+  /* Hover-only second photo is never seen on touch, so don't download it. */
+  [data-hover-photo] {
+    display: none !important;
+  }
+
+  /* Blurred fixed layers are expensive to composite over a scrolling page. */
+  [data-consent-banner],
+  .assistant-panel,
+  [data-compare-bar] > div,
+  [data-toast] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 }

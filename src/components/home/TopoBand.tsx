@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import TopoBackground from '../kokonutui/topo-background'
 import { Icon } from '../ui/Icon'
+import { useCompactDevice } from '../../hooks/useCompactDevice'
 
 /**
  * Branded usage of Kokonut UI's <TopoBackground />.
@@ -11,16 +12,18 @@ import { Icon } from '../ui/Icon'
  * overrides the component's 560px default to fit this band.
  */
 export function TopoBand() {
+  const compact = useCompactDevice()
+
   return (
     <TopoBackground
-      className="min-h-[520px] border-t border-line/60 bg-transparent text-bone"
-      interval={0.06}
-      speed={0.55}
+      className="min-h-[360px] border-t border-line/60 bg-transparent text-bone md:min-h-[520px]"
+      interval={compact ? 0.12 : 0.06}
+      speed={compact ? 0 : 0.55}
       seed={26}
       labels={false}
-      interactive
+      interactive={!compact}
     >
-      <div className="container-x relative z-10 flex flex-col items-center py-24 text-center md:py-28">
+      <div className="container-x relative z-10 flex flex-col items-center py-14 text-center md:py-28">
         <div className="mb-5 flex items-center gap-3">
           <span className="h-1.5 w-1.5 rounded-full bg-volt" />
           <span className="eyebrow">EVERY STEP DRAWS A LINE — CAIRO / 30.04° N</span>
