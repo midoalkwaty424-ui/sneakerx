@@ -184,6 +184,7 @@ npm run dev
 | `ADMIN_PASSWORD` | `SneakerX@2026` | كلمة مرور الأدمن عند أول تهيئة |
 | `DATABASE_PATH` | `./data/sneakerx.db` | مسار ملف SQLite |
 | `PUBLIC_URL` | `http://localhost:5173` | أصل الواجهة المسموح به في CORS، ويُستخدم كأصل روابط `sitemap.xml` / `robots.txt` |
+| `VITE_TUNNEL_HOST` | فارغ | مضيف نفق مؤقت (مثل Cloudflare quick tunnel) يُضاف للأصول المسموحة ويُستخدم في `allowedHosts` بـ Vite |
 | `OPENAI_API_KEY` | فارغ | **اختياري وسيرفر فقط**: يفعّل مساعد AI حقيقي. فارغ = قواعد محلية |
 | `OPENAI_MODEL` | `gpt-4o-mini` | النموذج المستخدم عند تفعيل المفتاح |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | نقطة نهاية متوافقة مع OpenAI (بديل محلي/مزوّد آخر) |
@@ -196,7 +197,7 @@ npm run dev
 | `VITE_GA4_ID` | فارغ | معرّف Google Analytics 4 (`G-XXXXXXX`) — لا يعمل إلا بعد الموافقة |
 | `VITE_META_PIXEL_ID` | فارغ | معرّف Meta Pixel — لا يعمل إلا بعد الموافقة |
 
-> متغيرات `VITE_*` تُقرأ وقت بناء الواجهة، فغيّرها في `.env` ثم أعد تشغيل `npm run dev` أو `npm run build`. متغيرات `OPENAI_*` تُقرأ على السيرفر فقط — **لا تستخدم بادئة `VITE_` مع مفتاح API أبدًا**، وأعد تشغيل `npm run dev:api` بعد تغييرها. أي فشل في الاتصال بمزوّد AI يعود تلقائيًا للقواعد المحلية دون تعطيل المتجر.
+> متغيرات `VITE_*` تُقرأ وقت بناء الواجهة، فغيّرها في `.env` ثم أعد تشغيل `npm run dev` أو `npm run build`. متغيرات `OPENAI_*` تُقرأ على السيرفر فقط — **لا تستخدم بادئة `VITE_` مع مفتاح API أبدًا**، وأعد تشغيل `npm run dev:api` بعد تغييرها. كذلك أعد تشغيل `npm run dev:api` بعد تغيير `PUBLIC_URL` أو `VITE_TUNNEL_HOST`، وإلا سيرفض السيرفر الطلبات القادمة من النفق الجديد برسالة «الطلب قادم من مصدر غير مسموح». أي فشل في الاتصال بمزوّد AI يعود تلقائيًا للقواعد المحلية دون تعطيل المتجر.
 
 ---
 

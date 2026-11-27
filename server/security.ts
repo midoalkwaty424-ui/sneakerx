@@ -8,8 +8,13 @@ export function allowedOrigins() {
   return new Set(
     [
       process.env.PUBLIC_URL,
+      process.env.VITE_TUNNEL_HOST?.trim()
+        ? `https://${process.env.VITE_TUNNEL_HOST.trim()}`
+        : undefined,
       'http://localhost:5173',
       'http://127.0.0.1:5173',
+      'http://localhost:5174',
+      'http://127.0.0.1:5174',
       'http://localhost:4000',
       'http://127.0.0.1:4000',
     ].filter(Boolean) as string[],
